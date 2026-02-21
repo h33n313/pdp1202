@@ -1,0 +1,187 @@
+[
+  {
+    "id": "test_clinical_1",
+    "userId": "nurse_test",
+    "nurseName": "پرستار تست (بخش داخلی)",
+    "ward": "داخلی",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "پرستار تست (بخش داخلی)",
+      "nationalId": "1111111111",
+      "education": "کارشناسی",
+      "formDate": "1404/12/03",
+      "hireDate": "1400/01/01",
+      "mobile": "09120000001",
+      "personnelId": "9001",
+      "orgPost": "پرستار"
+    },
+    "jobCategory": "SET_10_CLINICAL",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "CPR پایه" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "اهمیت بهداشت دست" },
+      { "questionId": "spec_nurse_1", "questionText": "اولویت اول آموزش اختصاصی", "section": "آموزش اختصاصی", "answer": "تشخیص پرستاری" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "کارگاه آموزشی" },
+      { "questionId": "q_ircme_know", "questionText": "اطلاع از امتیاز بازآموزی", "section": "سوالات کلی", "answer": "بله" },
+      { "questionId": "q_ircme_member", "questionText": "عضویت در IRCME", "section": "سوالات کلی", "answer": "بله" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "بله" }
+    ]
+  },
+  {
+    "id": "test_assistant_internal",
+    "userId": "aid_test_int",
+    "nurseName": "کمک پرستار تست (بخش داخلی)",
+    "ward": "داخلی",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "کمک پرستار تست (بخش داخلی)",
+      "nationalId": "2222222222",
+      "education": "دیپلم",
+      "formDate": "1404/12/03",
+      "hireDate": "1401/05/15",
+      "mobile": "09120000002",
+      "personnelId": "9002",
+      "orgPost": "کمک پرستار"
+    },
+    "jobCategory": "SET_11_ASSISTANT",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "آتش‌نشانی" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "ایزولاسیون" },
+      { "questionId": "spec_aid_1", "questionText": "اولویت اول اختصاصی", "section": "سوالات اختصاصی", "answer": "وضعیت‌دهی مناسب بیماران" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "آموزش عملی" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "بله" }
+    ]
+  },
+  {
+    "id": "test_secretary_internal",
+    "userId": "sec_test_int",
+    "nurseName": "منشی تست (بخش داخلی)",
+    "ward": "داخلی",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "منشی تست (بخش داخلی)",
+      "nationalId": "3333333333",
+      "education": "کاردانی",
+      "formDate": "1404/12/03",
+      "hireDate": "1402/10/01",
+      "mobile": "09120000003",
+      "personnelId": "9003",
+      "orgPost": "منشی"
+    },
+    "jobCategory": "SET_12_SECRETARY",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "اتوماسیون اداری" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "آشنایی با بیماری‌های واگیردار" },
+      { "questionId": "spec_sec_1", "questionText": "اولویت اول اختصاصی", "section": "سوالات اختصاصی", "answer": "HIS سیستم بیمارستانی" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "ارائه جزوات" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "خیر" }
+    ]
+  },
+  {
+    "id": "test_assistant_1",
+    "userId": "aid_test",
+    "nurseName": "کمک پرستار تست (بخش اورژانس)",
+    "ward": "اورژانس",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "کمک پرستار تست (بخش اورژانس)",
+      "nationalId": "2222222222",
+      "education": "دیپلم",
+      "formDate": "1404/12/03",
+      "hireDate": "1401/05/15",
+      "mobile": "09120000002",
+      "personnelId": "9002",
+      "orgPost": "کمک پرستار"
+    },
+    "jobCategory": "SET_11_ASSISTANT",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "آتش‌نشانی" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "ایزولاسیون" },
+      { "questionId": "spec_aid_1", "questionText": "اولویت اول اختصاصی", "section": "سوالات اختصاصی", "answer": "وضعیت‌دهی مناسب بیماران" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "آموزش عملی" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "بله" }
+    ]
+  },
+  {
+    "id": "test_secretary_1",
+    "userId": "sec_test",
+    "nurseName": "منشی تست (بخش اطفال)",
+    "ward": "اطفال",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "منشی تست (بخش اطفال)",
+      "nationalId": "3333333333",
+      "education": "کاردانی",
+      "formDate": "1404/12/03",
+      "hireDate": "1402/10/01",
+      "mobile": "09120000003",
+      "personnelId": "9003",
+      "orgPost": "منشی"
+    },
+    "jobCategory": "SET_12_SECRETARY",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "اتوماسیون اداری" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "آشنایی با بیماری‌های واگیردار" },
+      { "questionId": "spec_sec_1", "questionText": "اولویت اول اختصاصی", "section": "سوالات اختصاصی", "answer": "HIS سیستم بیمارستانی" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "ارائه جزوات" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "خیر" }
+    ]
+  },
+  {
+    "id": "test_support_1",
+    "userId": "supp_test",
+    "nurseName": "نیروی پشتیبانی تست",
+    "ward": "پشتیبانی",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "نیروی پشتیبانی تست",
+      "nationalId": "4444444444",
+      "education": "دیپلم",
+      "formDate": "1404/12/03",
+      "hireDate": "1399/03/20",
+      "mobile": "09120000004",
+      "personnelId": "9004",
+      "orgPost": "پشتیبانی"
+    },
+    "jobCategory": "SET_13_SUPPORT",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "بهداشت محیط" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "آشنایی با بیماری‌های واگیردار" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "کلاس /کنفرانس درون بیمارستانی" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "بله" }
+    ]
+  },
+  {
+    "id": "test_management_1",
+    "userId": "hn_test",
+    "nurseName": "سرپرستار تست (بخش ICU S)",
+    "ward": "ICU S",
+    "submissionDate": "1404/12/03",
+    "status": "SUBMITTED",
+    "bioData": {
+      "fullName": "سرپرستار تست (بخش ICU S)",
+      "nationalId": "5555555555",
+      "education": "کارشناسی ارشد",
+      "formDate": "1404/12/03",
+      "hireDate": "1395/08/10",
+      "mobile": "09120000005",
+      "personnelId": "9005",
+      "orgPost": "سرپرستار"
+    },
+    "jobCategory": "SET_9_MANAGEMENT",
+    "responses": [
+      { "questionId": "gen_a_1", "questionText": "اولویت اول آموزش عمومی (الف)", "section": "آموزش عمومی (الف)", "answer": "مدیریت بحران" },
+      { "questionId": "gen_b_1", "questionText": "اولویت اول آموزش عمومی (ب)", "section": "آموزش عمومی (ب)", "answer": "نظام مراقبت سندرومیک" },
+      { "questionId": "spec_hn_1", "questionText": "اولویت اول اختصاصی", "section": "آموزش اختصاصی", "answer": "مدیریت حل مسئله" },
+      { "questionId": "q_method", "questionText": "روش پیشنهادی", "section": "سوالات کلی", "answer": "کارگاه آموزشی" },
+      { "questionId": "q_ircme_know", "questionText": "اطلاع از امتیاز بازآموزی", "section": "سوالات کلی", "answer": "بله" },
+      { "questionId": "q_ircme_member", "questionText": "عضویت در IRCME", "section": "سوالات کلی", "answer": "بله" },
+      { "questionId": "q_whatsapp", "questionText": "عضویت در واتس‌اپ", "section": "سوالات کلی", "answer": "بله" }
+    ]
+  }
+]

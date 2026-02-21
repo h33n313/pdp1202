@@ -1,0 +1,5 @@
+{
+  "name": "Remix: Omid Hospital PDP System 1404-12-02",
+  "description": "A Professional Development Plan (PDP) management system for Omid Super-Specialty Hospital. Features role-based workflows for Nurses, Head Nurses, Supervisors, and Nursing Managers with AI-assisted goal setting.",
+  "requestFramePermissions": []
+}
