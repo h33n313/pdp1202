@@ -241,7 +241,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   const openReview = (pdp: PDPForm) => {
     setSelectedPDP(pdp);
-    setLocalResponses(JSON.parse(JSON.stringify(pdp.responses)));
+    setLocalResponses(pdp.responses ? JSON.parse(JSON.stringify(pdp.responses)) : []);
     setComment(
         user.role === UserRole.HEAD_NURSE ? pdp.headNurseComment || '' :
         user.role === UserRole.SUPERVISOR ? pdp.supervisorComment || '' :
@@ -577,7 +577,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
          });
      });
      categoryPdps.forEach(p => {
-         p.responses.forEach(r => {
+         if (p.responses) {
+             p.responses.forEach(r => {
              if (stats[r.questionId]) {
                  const val = r.answer;
                  if (val && val !== 'پاسخ داده نشده') {
@@ -589,6 +590,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                  }
              }
          });
+         }
      });
      return stats;
   };
@@ -1335,8 +1337,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                                 <div>
                                     <div className="font-bold text-gray-800">{pdp.nurseName}</div>
                                     <div className="flex items-center gap-2 mt-0.5">
-                                        <span className="text-[10px] text-gray-400 font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">کد: {pdp.bioData.personnelId}</span>
-                                        <span className="text-[10px] text-blue-500 font-bold bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">{pdp.bioData.education}</span>
+                                        <span className="text-[10px] text-gray-400 font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">کد: {pdp.bioData?.personnelId || pdp.userId}</span>
+                                        {pdp.bioData?.education && (
+                                            <span className="text-[10px] text-blue-500 font-bold bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">{pdp.bioData.education}</span>
+                                        )}
                                     </div>
                                 </div>
                             </div>
