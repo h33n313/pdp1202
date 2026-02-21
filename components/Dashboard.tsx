@@ -133,9 +133,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   const handleApproveAllPending = async () => {
     const pending = pdps.filter(p => {
-        if (user.role === UserRole.HEAD_NURSE) return p.status === PDPStatus.SUBMITTED;
+        if (user.role === UserRole.HEAD_NURSE) return p.status === PDPStatus.SUBMITTED && p.ward === user.ward;
         if (user.role === UserRole.SUPERVISOR) {
-            const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData.orgPost === 'سرپرستار';
+            const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData?.orgPost === 'سرپرستار';
             return isHN ? p.status === PDPStatus.SUBMITTED : p.status === PDPStatus.APPROVED_BY_HN;
         }
         return false;
@@ -146,8 +146,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     if (!confirm(`آیا از تایید تمامی ${pending.length} فرم منتظر بررسی اطمینان دارید؟`)) return;
 
     try {
-        for (const pdp of pending) {
-            const updatedResponses = pdp.responses.map(r => {
+        // Use Promise.all for faster bulk updates
+        await Promise.all(pending.map(async (pdp) => {
+            const updatedResponses = (pdp.responses || []).map(r => {
                 const updated = { ...r };
                 if (user.role === UserRole.HEAD_NURSE) updated.hnApproved = true;
                 if (user.role === UserRole.SUPERVISOR) updated.supApproved = true;
@@ -161,8 +162,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                 headNurseComment: user.role === UserRole.HEAD_NURSE ? 'تایید کلی توسط سیستم' : pdp.headNurseComment,
                 supervisorComment: user.role === UserRole.SUPERVISOR ? 'تایید کلی توسط سیستم' : pdp.supervisorComment
             };
-            await updatePDP(updatedPDP.id, updatedPDP);
-        }
+            return updatePDP(updatedPDP);
+        }));
+        
         addToast(`${pending.length} فرم با موفقیت تایید شدند`, 'success');
         loadPDPs();
     } catch (e) {
@@ -258,10 +260,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
     return pdps.filter(p => {
         if (user.role === UserRole.HEAD_NURSE) {
-            return p.status === PDPStatus.SUBMITTED;
+            return p.status === PDPStatus.SUBMITTED && p.ward === user.ward;
         }
         if (user.role === UserRole.SUPERVISOR) {
-             const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData.orgPost === 'سرپرستار';
+             const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData?.orgPost === 'سرپرستار';
              return isHN ? p.status === PDPStatus.SUBMITTED : p.status === PDPStatus.APPROVED_BY_HN;
         }
         if (user.role === UserRole.QUALITY_MANAGER) {
@@ -297,14 +299,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
       pdps.forEach(p => {
           const row = [
-              `"${p.bioData.fullName}"`,
-              p.bioData.personnelId,
-              p.bioData.nationalId,
+              `"${p.bioData?.fullName || p.nurseName}"`,
+              p.bioData?.personnelId || '',
+              p.bioData?.nationalId || '',
               `"${p.ward}"`,
-              `"${p.bioData.orgPost}"`,
-              `"${p.bioData.education}"`,
-              p.bioData.hireDate,
-              p.bioData.mobile,
+              `"${p.bioData?.orgPost || ''}"`,
+              `"${p.bioData?.education || ''}"`,
+              p.bioData?.hireDate || '',
+              p.bioData?.mobile || '',
               p.submissionDate,
               p.status
           ];
@@ -324,11 +326,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const handleExcelExport = () => {
       const questionMap = new Map<string, string>();
       pdps.forEach(p => {
-        p.responses.forEach(r => {
-          if (!questionMap.has(r.questionId)) {
-            questionMap.set(r.questionId, r.questionText);
-          }
-        });
+        if (p.responses) {
+          p.responses.forEach(r => {
+            if (!questionMap.has(r.questionId)) {
+              questionMap.set(r.questionId, r.questionText);
+            }
+          });
+        }
       });
 
       const questionIds = Array.from(questionMap.keys());
@@ -351,18 +355,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
       pdps.forEach(p => {
         const responseMap = new Map<string, string>();
-        p.responses.forEach(r => responseMap.set(r.questionId, r.answer));
+        if (p.responses) {
+          p.responses.forEach(r => responseMap.set(r.questionId, r.answer));
+        }
 
         const row = [
           p.id,
-          `"${p.bioData.fullName}"`,
-          p.bioData.personnelId,
-          p.bioData.nationalId,
+          `"${p.bioData?.fullName || p.nurseName}"`,
+          p.bioData?.personnelId || '',
+          p.bioData?.nationalId || '',
           `"${p.ward}"`,
-          `"${p.bioData.orgPost}"`,
-          `"${p.bioData.education}"`,
-          p.bioData.hireDate || '',
-          p.bioData.mobile,
+          `"${p.bioData?.orgPost || ''}"`,
+          `"${p.bioData?.education || ''}"`,
+          p.bioData?.hireDate || '',
+          p.bioData?.mobile || '',
           p.submissionDate,
           p.status,
           ...questionIds.map(qid => {
@@ -561,7 +567,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const getStatsByJobTitle = () => {
     const counts: Record<string, number> = {};
     pdps.forEach(p => {
-        counts[p.bioData.orgPost] = (counts[p.bioData.orgPost] || 0) + 1;
+        const post = p.bioData?.orgPost || 'نامشخص';
+        counts[post] = (counts[post] || 0) + 1;
     });
     return Object.entries(counts).sort((a, b) => b[1] - a[1]);
   };
@@ -598,24 +605,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const getGeneralAggregatedStats = () => {
     const stats: Record<string, { text: string, answers: Record<string, number>, total: number }> = {};
     pdps.forEach(p => {
-        p.responses.forEach(r => {
-            const isGeneral = r.questionId.startsWith('gen_') || r.questionId.startsWith('q_');
-            if (isGeneral) {
-                if (!stats[r.questionId]) {
-                    stats[r.questionId] = { text: r.questionText, answers: {}, total: 0 };
+        if (p.responses) {
+            p.responses.forEach(r => {
+                const isGeneral = r.questionId.startsWith('gen_') || r.questionId.startsWith('q_');
+                if (isGeneral) {
+                    if (!stats[r.questionId]) {
+                        stats[r.questionId] = { text: r.questionText, answers: {}, total: 0 };
+                    }
+                    const val = r.answer;
+                    if (val && val !== 'پاسخ داده نشده') {
+                        const parts = val.split('، ');
+                        parts.forEach(part => {
+                            if (part.trim()) {
+                                stats[r.questionId].answers[part] = (stats[r.questionId].answers[part] || 0) + 1;
+                                stats[r.questionId].total += 1;
+                            }
+                        });
+                    }
                 }
-                const val = r.answer;
-                if (val && val !== 'پاسخ داده نشده') {
-                    const parts = val.split('، ');
-                    parts.forEach(part => {
-                        if (part.trim()) {
-                            stats[r.questionId].answers[part] = (stats[r.questionId].answers[part] || 0) + 1;
-                            stats[r.questionId].total += 1;
-                        }
-                    });
-                }
-            }
-        });
+            });
+        }
     });
     return stats;
   };
@@ -624,13 +633,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
      const categoryPdps = pdps.filter(p => p.jobCategory === categoryId);
      const responses: { text: string, user: string, ward: string }[] = [];
      categoryPdps.forEach(p => {
-         const r = p.responses.find(res => res.questionId === 'q_unit_need');
-         if (r && r.answer && r.answer !== 'پاسخ داده نشده' && r.answer.trim().length > 1) {
-             responses.push({
-                 text: r.answer,
-                 user: p.nurseName,
-                 ward: p.ward
-             });
+         if (p.responses) {
+             const r = p.responses.find(res => res.questionId === 'q_unit_need');
+             if (r && r.answer && r.answer !== 'پاسخ داده نشده' && r.answer.trim().length > 1) {
+                 responses.push({
+                     text: r.answer,
+                     user: p.nurseName,
+                     ward: p.ward
+                 });
+             }
          }
      });
      return responses;
@@ -829,12 +840,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
   const renderFilteredTable = (filterRole: SeparatedTab) => {
      let filteredPdps = [];
-     if (filterRole === 'SUPERVISOR') filteredPdps = pdps.filter(p => p.bioData.orgPost === 'سوپروایزر');
-     else if (filterRole === 'HEAD_NURSE') filteredPdps = pdps.filter(p => p.bioData.orgPost === 'سرپرستار');
-     else if (filterRole === 'STAFF') filteredPdps = pdps.filter(p => p.bioData.orgPost !== 'سوپروایزر' && p.bioData.orgPost !== 'سرپرستار');
-     else if (filterRole === 'ADMIN') filteredPdps = pdps.filter(p => p.bioData.orgPost === 'اداری');
-     else if (filterRole === 'SUPPORT') filteredPdps = pdps.filter(p => p.bioData.orgPost === 'پشتیبانی');
-     else if (filterRole === 'OTHER') filteredPdps = pdps.filter(p => p.bioData.orgPost === 'سایر');
+     if (filterRole === 'SUPERVISOR') filteredPdps = pdps.filter(p => p.bioData?.orgPost === 'سوپروایزر');
+     else if (filterRole === 'HEAD_NURSE') filteredPdps = pdps.filter(p => p.bioData?.orgPost === 'سرپرستار');
+     else if (filterRole === 'STAFF') filteredPdps = pdps.filter(p => p.bioData?.orgPost !== 'سوپروایزر' && p.bioData?.orgPost !== 'سرپرستار');
+     else if (filterRole === 'ADMIN') filteredPdps = pdps.filter(p => p.bioData?.orgPost === 'اداری');
+     else if (filterRole === 'SUPPORT') filteredPdps = pdps.filter(p => p.bioData?.orgPost === 'پشتیبانی');
+     else if (filterRole === 'OTHER') filteredPdps = pdps.filter(p => p.bioData?.orgPost === 'سایر');
 
      return renderTable(filteredPdps);
   };
@@ -1230,7 +1241,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         return (
             p.nurseName.toLowerCase().includes(term) ||
             p.ward.toLowerCase().includes(term) ||
-            p.bioData.orgPost.toLowerCase().includes(term) ||
+            (p.bioData?.orgPost || '').toLowerCase().includes(term) ||
             p.userId.includes(term)
         );
     });
@@ -1348,7 +1359,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
                         <td className="p-5">
                             <div className="flex flex-col">
                                 <span className="text-sm font-medium text-gray-700">{pdp.ward}</span>
-                                <span className="text-xs text-gray-400">{pdp.bioData.orgPost}</span>
+                                <span className="text-xs text-gray-400">{pdp.bioData?.orgPost || ''}</span>
                             </div>
                         </td>
                         <td className="p-5 text-gray-600 font-medium text-sm">{pdp.submissionDate}</td>
@@ -1437,7 +1448,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     const pending = pdps.filter(p => {
         if (user.role === UserRole.HEAD_NURSE) return p.status === PDPStatus.SUBMITTED;
         if (user.role === UserRole.SUPERVISOR) {
-            const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData.orgPost === 'سرپرستار';
+            const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData?.orgPost === 'سرپرستار';
             return isHN ? p.status === PDPStatus.SUBMITTED : p.status === PDPStatus.APPROVED_BY_HN;
         }
         return false;
@@ -1446,7 +1457,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     const history = pdps.filter(p => {
          if (user.role === UserRole.HEAD_NURSE) return p.status !== PDPStatus.SUBMITTED;
          if (user.role === UserRole.SUPERVISOR) {
-             const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData.orgPost === 'سرپرستار';
+             const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData?.orgPost === 'سرپرستار';
              return isHN ? p.status !== PDPStatus.SUBMITTED : p.status !== PDPStatus.APPROVED_BY_HN;
          }
          return false;
@@ -2021,9 +2032,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
 
       {/* Floating Approve All Button for HN/SUP */}
       {(user.role === UserRole.HEAD_NURSE || user.role === UserRole.SUPERVISOR) && pdps.some(p => {
-          if (user.role === UserRole.HEAD_NURSE) return p.status === PDPStatus.SUBMITTED;
+          if (user.role === UserRole.HEAD_NURSE) return p.status === PDPStatus.SUBMITTED && p.ward === user.ward;
           if (user.role === UserRole.SUPERVISOR) {
-              const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData.orgPost === 'سرپرستار';
+              const isHN = p.jobCategory === JobCategory.SET_9_MANAGEMENT && p.bioData?.orgPost === 'سرپرستار';
               return isHN ? p.status === PDPStatus.SUBMITTED : p.status === PDPStatus.APPROVED_BY_HN;
           }
           return false;
