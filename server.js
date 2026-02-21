@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createServer as createViteServer } from 'vite';
 
 // Setup __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -12,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT || 4000;
 
   // IMPORTANT: For Easypanel/Docker persistence, we use a dedicated data folder
   const DATA_DIR = path.join(__dirname, 'data');
@@ -70,6 +69,7 @@ async function startServer() {
   };
 
   initDB();
+  console.log(`📂 Database: ${DB_FILE}`);
 
   // --- API ROUTES ---
   app.get('/api/pdps', (req, res) => {
@@ -153,6 +153,7 @@ async function startServer() {
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -166,7 +167,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    console.log(`🚀 Server is running on port ${PORT}`);
   });
 }
 

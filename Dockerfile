@@ -31,8 +31,8 @@ RUN npm install --omit=dev
 # ایجاد پوشه دیتا برای ذخیره دیتابیس (بسیار مهم برای Persistence)
 RUN mkdir -p /app/data
 
-# تنظیم پورت (مطابق با کد سرور)
-EXPOSE 3000
+# تنظیم پورت (مطابق با تنظیمات ایزی‌پنل)
+EXPOSE 4000
 
 # دستور اجرای سرور
 CMD ["node", "server.js"]
